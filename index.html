@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<meta name="description" content="Curso de programación con Scratch para niños: misiones cortas, XP y medallas.">
+<title>Liga de Creadores</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231c7a45'/%3E%3Cpolygon points='16,9 22,13.5 19.7,20.5 12.3,20.5 10,13.5' fill='%23ffb400'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Concepto: una liga de fútbol. Cabecera de campo con líneas de cal, mapa de misiones como recorrido de temporada, bloques de Scratch con sus colores reales. */
+:root {
+  --bg: #eff4ec;
+  --surface: #ffffff;
+  --surface-2: #e3ebdf;
+  --ink: #13261a;
+  --muted: #536a5a;
+  --line: #cddac9;
+  --hero-bg: #1c7a45;
+  --hero-ink: #ffffff;
+  --pitch: #1c7a45;
+  --pitch-ink: #ffffff;
+  --accent: #ffb400;
+  --accent-ink: #2a1c00;
+  --bad: #b3261e;
+  --lock: #8ea294;
+  --b-motion: #2f6fd1;
+  --b-looks: #7a4fd6;
+  --b-sound: #b24bb2;
+  --b-events: #f2b200;
+  --b-control: #e08e0b;
+  --b-sensing: #2a86ad;
+  --b-operators: #38963a;
+  --b-variables: #d96e00;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1b14;
+    --surface: #162a1f;
+    --surface-2: #1d3628;
+    --ink: #e9f3ec;
+    --muted: #9db5a4;
+    --line: #2a4435;
+    --hero-bg: #14502f;
+    --pitch: #3fbf72;
+    --pitch-ink: #08150d;
+    --accent: #ffc233;
+    --bad: #ff8a80;
+    --lock: #587064;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1b14;
+  --surface: #162a1f;
+  --surface-2: #1d3628;
+  --ink: #e9f3ec;
+  --muted: #9db5a4;
+  --line: #2a4435;
+  --hero-bg: #14502f;
+  --pitch: #3fbf72;
+  --pitch-ink: #08150d;
+  --accent: #ffc233;
+  --bad: #ff8a80;
+  --lock: #587064;
+  color-scheme: dark;
+}
+html { color-scheme: light; }
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  padding-inline: 16px;
+  padding-block: calc(20px + env(safe-area-inset-top, 0px)) calc(48px + env(safe-area-inset-bottom, 0px));
+}
+#app { max-width: 720px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--pitch); font-weight: 700; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.kicker { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Cabecera de campo */
+.hero { position: relative; background: var(--hero-bg); color: var(--hero-ink); border-radius: 8px; padding: 22px 20px 20px; overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
+.hero svg.pitch { position: absolute; inset: 0; width: 100%; height: 100%; color: #fff; opacity: 0.2; pointer-events: none; }
+.hero > *:not(svg) { position: relative; }
+.hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 800; }
+.hero .name-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.hero input[type="text"] { font: inherit; min-width: 0; flex: 1 1 160px; padding: 8px 12px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.25); color: #fff; }
+.hero input::placeholder { color: rgba(255,255,255,0.7); }
+.btn { border: 0; border-radius: 6px; padding: 10px 18px; font-weight: 800; background: var(--accent); color: var(--accent-ink); }
+.btn:hover { filter: brightness(1.06); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.btn.alt { background: var(--surface); color: var(--ink); border: 2px solid var(--line); }
+.btn.green { background: var(--pitch); color: var(--pitch-ink); }
+.stats { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 560px) { .stats { grid-template-columns: 1.4fr 1fr; } }
+.xp-num { font-family: var(--font-display); font-weight: 800; font-size: 2.4rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.xp-num small { font-size: 1rem; font-weight: 600; opacity: 0.85; margin-left: 4px; }
+.meter { height: 12px; background: rgba(0,0,0,0.3); border-radius: 99px; overflow: hidden; margin-block: 8px 6px; }
+.meter > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.stat-note { font-size: 0.88rem; opacity: 0.92; }
+.week { background: rgba(0,0,0,0.22); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.week b { font-family: var(--font-display); font-size: 1.7rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+
+/* Secciones */
+section { display: flex; flex-direction: column; gap: 14px; }
+section > h2 { font-size: 1.35rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+
+/* Reto del día */
+.daily { display: flex; flex-direction: column; gap: 12px; }
+.daily .q { font-size: 1.08rem; font-weight: 700; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { background: var(--surface-2); border: 2px solid var(--line); border-radius: 6px; padding: 8px 16px; font-weight: 700; min-width: 64px; }
+.opt:hover { border-color: var(--pitch); }
+.daily .msg { font-weight: 700; }
+.ok { color: var(--pitch); }
+.no { color: var(--bad); }
+
+/* Mapa */
+ol.map { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; position: relative; }
+ol.map::before { content: ""; position: absolute; left: 19px; top: 20px; bottom: 20px; border-left: 3px dashed var(--line); }
+ol.map > li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; position: relative; }
+.node { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; background: var(--surface); border: 3px solid var(--lock); color: var(--muted); }
+.node svg { width: 20px; height: 20px; }
+.st-open .node { border-color: var(--accent); color: var(--ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+.st-done .node { background: var(--pitch); border-color: var(--pitch); color: var(--pitch-ink); }
+.mcard { width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.st-open .mcard, .st-done .mcard { border-color: var(--pitch); }
+.st-open .mcard:hover, .st-done .mcard:hover { background: var(--surface-2); }
+.st-lock .mcard { cursor: default; opacity: 0.7; }
+.mcard h3 { font-size: 1.15rem; }
+.mcard .row { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; color: var(--muted); font-weight: 600; }
+.pill { display: inline-block; font-size: 0.75rem; font-weight: 800; padding: 2px 9px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.pill.go { background: var(--pitch); color: var(--pitch-ink); }
+.future { margin-top: 4px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.future div { border: 2px dashed var(--line); border-radius: 8px; padding: 10px 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.future b { color: var(--ink); font-family: var(--font-display); }
+.future span { font-size: 0.85rem; }
+
+/* Medallas y galería */
+.medals { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.medal { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 0.85rem; }
+.medal svg { width: 44px; height: 54px; }
+.medal.off { opacity: 0.55; }
+.medal b { font-family: var(--font-display); font-size: 0.95rem; }
+ul.gallery { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+ul.gallery li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+
+/* Misión */
+.back { align-self: flex-start; }
+.mhead { display: flex; flex-direction: column; gap: 10px; }
+.mhead h1 { font-size: clamp(1.8rem, 7vw, 2.4rem); font-weight: 800; }
+.mhead .goal { font-size: 1.12rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-size: 0.82rem; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.steps label { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; cursor: pointer; }
+.steps input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--pitch); }
+.steps li.on label { border-color: var(--pitch); background: color-mix(in srgb, var(--pitch) 10%, var(--surface)); }
+.steps li.on .txt { color: var(--muted); }
+.blk { display: inline-block; padding: 0 9px; margin-block: 1px; border-radius: 5px; color: #fff; font-weight: 800; font-size: 0.92em; line-height: 1.55; }
+.b-motion { background: var(--b-motion); } .b-looks { background: var(--b-looks); } .b-sound { background: var(--b-sound); }
+.b-events { background: var(--b-events); color: #2a1f00; } .b-control { background: var(--b-control); color: #2a1700; }
+.b-sensing { background: var(--b-sensing); } .b-operators { background: var(--b-operators); } .b-variables { background: var(--b-variables); }
+.progress { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+details.help { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+details.help summary { cursor: pointer; font-weight: 800; }
+details.help p { margin-top: 8px; }
+.reto { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; border: 2px dashed var(--accent); border-radius: 8px; padding: 12px 14px; cursor: pointer; }
+.reto input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--pitch); }
+.linkbox { display: flex; flex-direction: column; gap: 6px; }
+.linkbox label { font-weight: 800; }
+.linkbox input { font: inherit; width: 100%; min-width: 0; padding: 10px 12px; border-radius: 6px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); }
+.linkbox small { color: var(--muted); }
+.win { background: var(--pitch); color: var(--pitch-ink); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.win h2 { font-size: 1.6rem; }
+.win .btn { align-self: flex-start; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* Pie */
+footer { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--line); padding-top: 16px; font-size: 0.9rem; }
+footer .actions .btn { padding: 7px 14px; }
+footer textarea { font: 0.8rem/1.4 ui-monospace, Menlo, Consolas, monospace; width: 100%; min-height: 90px; padding: 8px; border-radius: 6px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); word-break: break-all; }
+.warn { background: color-mix(in srgb, var(--accent) 25%, var(--surface)); border: 1px solid var(--accent); border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; }
+.confetti { position: fixed; top: 0; left: 0; width: 10px; height: 14px; border-radius: 2px; pointer-events: none; z-index: 50; }
+.acct { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; font-size: 0.88rem; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 12px; }
+.acct span { min-width: 0; overflow-wrap: anywhere; }
+.btn.sm { padding: 6px 12px; font-size: 0.88rem; }
+form.login { display: flex; flex-direction: column; gap: 14px; }
+form.login .msg { font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'liga-creadores-v1';
+  /* Supabase (proyecto andalar-projects). La clave anon es pública por diseño: los datos los protege RLS en liga_progress. */
+  var SB_URL = 'https://fxgjzfpasyxwiegmiwzb.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4Z2p6ZnBhc3l4d2llZ21pd3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMjcxMTksImV4cCI6MjEwMjgwMzExOX0.UUqyq3x3SKpJhOJUWfKwfIATvspkvK0zT9MfRCVmUag';
+  var sb = null;
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+    }
+  } catch (e) { sb = null; }
+  var session = null;
+  var syncState = 'local';
+  var RETO_XP = 5, DAILY_XP = 2;
+  var LINK_RE = /^https:\/\/scratch\.mit\.edu\/projects\/\d+\/?$/;
+  var SCRATCH_URL = 'https://scratch.mit.edu/projects/editor/';
+
+  var MISSIONS = [
+    { id: 'm1', n: 1, title: 'Mueve el balón', time: 10, xp: 10, concept: 'Eventos y coordenadas',
+      goal: 'Controla un balón con las flechas del teclado.',
+      steps: [
+        'Abre Scratch y crea un proyecto nuevo.',
+        'Borra el gato y elige un personaje de la biblioteca: busca «soccer ball».',
+        'Cambia el fondo por un campo de fútbol: busca «soccer» en la biblioteca de fondos.',
+        'Arrastra {events|al presionar tecla espacio} y cambia la tecla a flecha derecha.',
+        'Debajo, pon {motion|sumar 10 a x}. ¡Pulsa la flecha y mira cómo se mueve!',
+        'Repite para las otras tres flechas: izquierda (x con -10), arriba ({motion|sumar 10 a y}) y abajo (y con -10).'
+      ],
+      fail: '¿Se mueve al revés? Mira el signo del número. ¿No se mueve? Haz clic dentro del escenario antes de pulsar las teclas.',
+      reto: 'Que el balón gire mientras avanza (bloque {motion|girar}) o que vaya más rápido cambiando el 10 por otro número.' },
+    { id: 'm2', n: 2, title: '¡Gol!', time: 15, xp: 15, concept: 'Condicionales y bucles',
+      goal: 'Haz que el juego se dé cuenta de cuándo el balón entra en la portería y lo celebre.',
+      steps: [
+        'Crea un personaje nuevo con el pincel (Pintar): dibuja un rectángulo blanco y llámalo Portería. Colócalo arriba del campo.',
+        'Selecciona el balón y añade {events|al hacer clic en la bandera verde}.',
+        'Debajo, añade {control|por siempre} y dentro un {control|si … entonces}.',
+        'En la condición, pon {sensing|¿tocando Portería?}.',
+        'Dentro del «si», añade {sound|reproducir sonido} (busca «cheer»), {looks|decir ¡GOOOL! por 2 segundos} y {motion|ir a x: 0 y: -120} para volver al centro.',
+        'Pulsa la bandera verde y marca un gol.'
+      ],
+      fail: 'El balón no reacciona. Comprueba que el bloque «si» está dentro de «por siempre» y que el nombre de la portería coincide.',
+      reto: 'Que al marcar cambie el fondo, o que el balón cambie de disfraz.' },
+    { id: 'm3', n: 3, title: 'El portero', time: 15, xp: 15, concept: 'Movimiento automático y bucles',
+      goal: 'Crea un portero que se mueve solo y que no es tan fácil de superar.',
+      steps: [
+        'Añade un personaje nuevo: una persona de la biblioteca o dibujada por ti. Llámalo Portero y colócalo delante de la portería.',
+        'Añade {events|al hacer clic en la bandera verde} y debajo un {control|por siempre}.',
+        'Dentro del bucle, pon {motion|deslizar en 1 segundos a x: -100 y: …} y, debajo, otro {motion|deslizar en 1 segundos a x: 100 y: …}. Deja la y como está, para que se mueva en línea recta delante de la portería.',
+        'Pulsa la bandera: el portero va de un lado a otro sin parar.',
+        'Vuelve al balón. Dentro de su {control|por siempre}, añade otro {control|si … entonces} con {sensing|¿tocando Portero?} y, dentro: {looks|decir ¡Parada! por 1 segundo} e {motion|ir a x: 0 y: -120}.'
+      ],
+      fail: 'El portero no se mueve. Comprueba que has hecho clic en la bandera verde y que los bloques están dentro del bucle.',
+      reto: 'Hazlo más rápido cambiando el 1 por 0,5. Aún más difícil: que el portero se mueva a un punto al azar con {operators|número al azar entre -100 y 100}.' },
+    { id: 'm4', n: 4, title: 'El marcador', time: 10, xp: 10, concept: 'Variables',
+      goal: 'Haz que el juego cuente los goles.',
+      steps: [
+        'En la categoría naranja Variables, pulsa «Crear una variable», llámala Goles y deja marcada la opción «para todos los objetos». Verás el marcador en el escenario.',
+        'Selecciona el balón. Dentro de {events|al hacer clic en la bandera verde}, antes del {control|por siempre}, añade {variables|fijar Goles a 0}.',
+        'En el {control|si … entonces} del gol, antes de volver al centro, añade {variables|sumar 1 a Goles}.',
+        'Pulsa la bandera y marca tres goles. ¿Marca 3?'
+      ],
+      fail: 'El marcador no sube o sube de golpe. Comprueba que el «sumar 1» está dentro del «si» del gol y no dentro del bucle sin condición.',
+      reto: 'Crea otra variable, Paradas, que suba cada vez que el portero toca el balón. Después compara: ¿has marcado más goles que paradas ha hecho el portero?' },
+    { id: 'm5', n: 5, title: 'Tu primer partido completo', time: 15, xp: 30, concept: 'Condición de victoria y compartir',
+      goal: 'Convierte lo que has hecho en un juego con final, nombre y camiseta propia, y enséñaselo a alguien.',
+      steps: [
+        'En el balón, dentro del {control|por siempre}, añade un nuevo {control|si … entonces} con la condición {operators|Goles = 5}.',
+        'Dentro, pon {looks|decir ¡HAS GANADO! por 2 segundos} y después {control|detener todos}.',
+        'Personaliza: cambia el nombre del proyecto por el de tu juego, dibuja un disfraz con los colores de tu equipo y añade un sonido de victoria.',
+        'Pulsa «Compartir» (con la cuenta de Scratch) y copia el enlace.',
+        'Enseña el juego a alguien y deja que lo pruebe. No le digas cómo se juega: mira si lo entiende solo.'
+      ],
+      fail: 'El juego no termina al llegar a 5. Comprueba que has usado «=» y no «>», y que el «si» está dentro del bucle.',
+      reto: 'Gana 5 goles en menos de 30 segundos. Usa el bloque {sensing|cronómetro} y compara con 30.' }
+  ];
+
+  var FUTURE = [
+    { n: 'Nivel 2', t: 'Ping pong', d: 'Rebotes y vidas' },
+    { n: 'Nivel 3', t: 'Mates', d: 'Juegos de preguntas' },
+    { n: 'Nivel 4', t: 'Ajedrez', d: 'Tablero y caballo' },
+    { n: 'Nivel 5', t: 'Python', d: 'Tu primer código' }
+  ];
+
+  var RANKS = [
+    { n: 'Cantera', xp: 0 }, { n: 'Suplente', xp: 20 }, { n: 'Titular', xp: 45 },
+    { n: 'Capitán', xp: 80 }, { n: 'Leyenda', xp: 110 }
+  ];
+
+  var DAILY = [
+    { q: 'Un programa repite 4 veces «mover 10 pasos». ¿Cuántos pasos avanza en total?', o: ['14', '40', '104'], a: 1, why: '4 × 10 = 40. Repetir es lo que hace un bucle.' },
+    { q: '«Si el balón toca la portería, suma 1 gol». ¿Cómo se llama este tipo de bloque?', o: ['Un bucle', 'Una variable', 'Un condicional'], a: 2, why: 'El «si… entonces» decide según lo que pasa: es un condicional.' },
+    { q: 'La variable Goles vale 3 y el programa ejecuta «sumar 1 a Goles» dos veces. ¿Cuánto vale ahora?', o: ['6', '5', '4'], a: 1, why: '3 + 1 + 1 = 5.' },
+    { q: 'En ajedrez, el caballo está en x = 3, y = 3 y salta 2 casillas en x y 1 en y. ¿Dónde cae?', o: ['(5, 4)', '(4, 5)', '(5, 5)'], a: 0, why: 'x: 3 + 2 = 5 e y: 3 + 1 = 4. Así se calculan las posiciones en un tablero.' },
+    { q: 'En ping pong la pelota va a la derecha con x = +5 por turno. ¿Qué número usarías para que vaya a la izquierda?', o: ['+5', '0', '-5'], a: 2, why: 'Con -5 la x va restando, y la pelota retrocede.' },
+    { q: 'Quieres que el portero se mueva sin parar de lado a lado. ¿Qué bloque necesitas?', o: ['«detener todos»', '«por siempre»', '«decir hola»'], a: 1, why: '«por siempre» repite lo de dentro hasta que pares el juego.' },
+    { q: 'Un juego empieza con 3 vidas y pierdes una cada vez que fallas. Fallas 2 veces. ¿Cuántas vidas quedan?', o: ['2', '1', '0'], a: 1, why: '3 - 2 = 1 vida. Las vidas son una variable.' }
+  ];
+
+  /* ---------- Utilidades ---------- */
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function fmt(s) {
+    return s.split(/(\{\w+\|[^}]+\})/).map(function (p) {
+      var m = /^\{(\w+)\|([^}]+)\}$/.exec(p);
+      return m ? '<span class="blk b-' + m[1] + '">' + esc(m[2]) + '</span>' : esc(p);
+    }).join('');
+  }
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function weekIdx(d) {
+    var days = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+    return Math.floor((days - 4) / 7); // semanas que empiezan en lunes
+  }
+  function streakOf(weeks, now) {
+    var set = new Set(weeks), run = 0, missed = 0;
+    for (var w = now; w >= now - 60; w--) {
+      if (set.has(w)) { run++; missed = 0; } else { missed++; if (missed >= 2) break; }
+    }
+    return run;
+  }
+  function mById(id) { return MISSIONS.filter(function (m) { return m.id === id; })[0]; }
+
+  /* ---------- Estado ---------- */
+  var storageOk = true;
+  var state;
+  function blank() { return { epoch: 0, name: '', steps: {}, done: {}, reto: {}, links: {}, daily: {}, weeks: [] }; }
+  function normalize(o) {
+    var b = blank();
+    if (!o || typeof o !== 'object') o = {};
+    if (typeof o.epoch === 'number' && isFinite(o.epoch) && o.epoch > 0) b.epoch = Math.floor(o.epoch);
+    if (typeof o.name === 'string') b.name = o.name.slice(0, 24);
+    MISSIONS.forEach(function (m) {
+      var st = o.steps && o.steps[m.id];
+      b.steps[m.id] = m.steps.map(function (_, i) { return !!(Array.isArray(st) && st[i]); });
+      if (o.done && o.done[m.id] === true) b.done[m.id] = true;
+      if (o.reto && o.reto[m.id] === true) b.reto[m.id] = true;
+      var l = o.links && o.links[m.id];
+      if (typeof l === 'string' && LINK_RE.test(l)) b.links[m.id] = l;
+    });
+    if (o.daily && typeof o.daily === 'object') {
+      Object.keys(o.daily).forEach(function (k) { if (/^\d{4}-\d{2}-\d{2}$/.test(k) && o.daily[k] === true) b.daily[k] = true; });
+    }
+    if (Array.isArray(o.weeks)) b.weeks = Array.from(new Set(o.weeks.filter(Number.isInteger))).slice(-200);
+    return b;
+  }
+  function load() {
+    try {
+      var r = localStorage.getItem(KEY);
+      if (r) return normalize(JSON.parse(r));
+    } catch (e) { storageOk = false; }
+    return normalize(null);
+  }
+  function saveLocal() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch (e) { storageOk = false; }
+  }
+  function save() { saveLocal(); schedulePush(); }
+
+  /* ---------- Sincronización con Supabase ---------- */
+  /* Fusión: gana el reinicio más reciente (epoch); si no hay reinicio, se une todo lo hecho en ambos lados. */
+  function mergeStates(a, b) {
+    if (a.epoch > b.epoch) return a;
+    if (b.epoch > a.epoch) return b;
+    var r = blank();
+    r.epoch = a.epoch;
+    r.name = b.name || a.name;
+    MISSIONS.forEach(function (m) {
+      r.steps[m.id] = m.steps.map(function (_, i) { return !!(a.steps[m.id][i] || b.steps[m.id][i]); });
+      if (a.done[m.id] || b.done[m.id]) r.done[m.id] = true;
+      if (a.reto[m.id] || b.reto[m.id]) r.reto[m.id] = true;
+      var l = a.links[m.id] || b.links[m.id];
+      if (l) r.links[m.id] = l;
+    });
+    Object.keys(a.daily).concat(Object.keys(b.daily)).forEach(function (k) { r.daily[k] = true; });
+    r.weeks = Array.from(new Set(a.weeks.concat(b.weeks))).slice(-200);
+    return r;
+  }
+  function syncText() {
+    if (!sb || !session) return '';
+    return syncState === 'ok' ? 'Sincronizado' : syncState === 'syncing' ? 'Sincronizando…' : syncState === 'offline' ? 'Sin conexión: se guarda aquí y se sincroniza después' : '';
+  }
+  function setSync(s) {
+    syncState = s;
+    var el = document.getElementById('syncnote');
+    if (el) el.textContent = syncText();
+  }
+  var pushTimer = null;
+  function schedulePush() {
+    if (!sb || !session) return;
+    clearTimeout(pushTimer);
+    setSync('syncing');
+    pushTimer = setTimeout(push, 700);
+  }
+  async function push() {
+    if (!sb || !session) return;
+    try {
+      var r = await sb.from('liga_progress').upsert({ user_id: session.user.id, data: state, updated_at: new Date().toISOString() });
+      if (r.error) throw r.error;
+      setSync('ok');
+    } catch (e) { setSync('offline'); }
+  }
+  async function pull() {
+    if (!sb || !session) return;
+    setSync('syncing');
+    try {
+      var uid = session.user.id, last = null;
+      try { last = localStorage.getItem(KEY + '-uid'); } catch (e) {}
+      if (last && last !== uid) state = normalize(null); // otra cuenta en este navegador: no mezclar progresos
+      try { localStorage.setItem(KEY + '-uid', uid); } catch (e) {}
+      var r = await sb.from('liga_progress').select('data').eq('user_id', uid).maybeSingle();
+      if (r.error) throw r.error;
+      var remote = normalize(r.data ? r.data.data : null);
+      var merged = mergeStates(state, remote);
+      var changedLocal = JSON.stringify(merged) !== JSON.stringify(state);
+      state = merged;
+      saveLocal();
+      if (!r.data || JSON.stringify(merged) !== JSON.stringify(remote)) await push(); else setSync('ok');
+      if (changedLocal) render();
+    } catch (e) { setSync('offline'); }
+  }
+  function authErr(e) {
+    var m = (e && e.message) || '';
+    if (/invalid login/i.test(m)) return 'Correo o contraseña incorrectos.';
+    if (/already registered|already been registered/i.test(m)) return 'Ese correo ya tiene cuenta. Pulsa Entrar.';
+    if (/not confirmed/i.test(m)) return 'Falta confirmar el correo. Mira tu bandeja de entrada.';
+    if (/rate limit|too many/i.test(m)) return 'Demasiados intentos. Espera un poco y vuelve a probar.';
+    if (/password/i.test(m)) return 'La contraseña no vale. Prueba con otra más larga.';
+    return 'No se pudo completar. Inténtalo de nuevo.';
+  }
+  async function doAuth(kind) {
+    var email = ((document.getElementById('lm') || {}).value || '').trim();
+    var pw = (document.getElementById('lp') || {}).value || '';
+    loginEmail = email;
+    if (!email || pw.length < 8) { loginMsg = 'Escribe tu correo y una contraseña de al menos 8 caracteres.'; render(); return; }
+    loginBusy = true;
+    loginMsg = kind === 'in' ? 'Entrando…' : 'Creando la cuenta…';
+    render();
+    try {
+      var r = kind === 'in'
+        ? await sb.auth.signInWithPassword({ email: email, password: pw })
+        : await sb.auth.signUp({ email: email, password: pw });
+      if (r.error) throw r.error;
+      if (r.data && r.data.session) { loginMsg = ''; view = 'map'; }
+      else loginMsg = 'Cuenta creada. Revisa tu correo para confirmarla y luego pulsa Entrar.';
+    } catch (e) { loginMsg = authErr(e); }
+    loginBusy = false;
+    render();
+  }
+  function xp() {
+    var t = 0;
+    MISSIONS.forEach(function (m) { if (state.done[m.id]) t += m.xp + (state.reto[m.id] ? RETO_XP : 0); });
+    return t + Object.keys(state.daily).length * DAILY_XP;
+  }
+  function addWeek() {
+    var w = weekIdx(new Date());
+    if (state.weeks.indexOf(w) < 0) state.weeks.push(w);
+  }
+  function status(m) {
+    if (state.done[m.id]) return 'done';
+    if (m.n === 1 || state.done[MISSIONS[m.n - 2].id]) return 'open';
+    return 'lock';
+  }
+  function allSteps(m) { return state.steps[m.id].every(Boolean); }
+
+  /* ---------- Vistas ---------- */
+  var app = document.getElementById('app');
+  var view = 'map';
+  var justDone = null;
+  var dailyMsg = null;
+  var drafts = {};
+  var linkMsg = {};
+  var showBackup = false;
+  var backupText = '';
+  var backupMsg = '';
+  var resetArm = false;
+  var loginEmail = '';
+  var loginMsg = '';
+  var loginBusy = false;
+
+  var ICON_CHECK = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ICON_LOCK = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="2" fill="currentColor"/><path d="M7 9V6.5a3 3 0 016 0V9" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+  var PITCH = '<svg class="pitch" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="10" width="380" height="180"/><line x1="200" y1="10" x2="200" y2="190"/><circle cx="200" cy="100" r="34"/><rect x="10" y="55" width="52" height="90"/><rect x="338" y="55" width="52" height="90"/><rect x="10" y="78" width="20" height="44"/><rect x="370" y="78" width="20" height="44"/></g></svg>';
+  function medal(on) {
+    var fill = on ? 'var(--accent)' : 'var(--lock)';
+    return '<svg viewBox="0 0 44 54" aria-hidden="true"><path d="M10 0h9l5 18h-9z" fill="' + (on ? 'var(--pitch)' : 'var(--lock)') + '"/><path d="M34 0h-9l-5 18h9z" fill="' + (on ? 'var(--b-motion)' : 'var(--lock)') + '"/><circle cx="22" cy="35" r="16" fill="' + fill + '"/><polygon points="22,27 29,32 26.5,41 17.5,41 15,32" fill="#2a1c00"/></svg>';
+  }
+
+  function heroHTML() {
+    var total = xp();
+    var rank = RANKS[0], next = null, i;
+    for (i = 0; i < RANKS.length; i++) { if (total >= RANKS[i].xp) { rank = RANKS[i]; next = RANKS[i + 1] || null; } }
+    var pct = next ? Math.min(100, Math.round((total - rank.xp) / (next.xp - rank.xp) * 100)) : 100;
+    var note = next ? 'Te faltan ' + (next.xp - total) + ' XP para ser ' + next.n : 'Has llegado al máximo rango. ¡Leyenda!';
+    var now = weekIdx(new Date());
+    var played = state.weeks.indexOf(now) >= 0;
+    var run = streakOf(state.weeks, now);
+    var nameRow = state.name
+      ? '<p class="kicker">Hola, ' + esc(state.name) + '</p>'
+      : '<form class="name-row" data-form="name"><label class="sr" for="nm">Tu nombre</label><input id="nm" data-fid="nm" type="text" maxlength="24" placeholder="¿Cómo te llamas, crack?" autocomplete="off"><button class="btn" type="submit">Entrar al campo</button></form>';
+    return '<header class="hero">' + PITCH +
+      '<p class="kicker">Nivel 1 · Fútbol</p><h1>Liga de Creadores</h1>' + nameRow +
+      '<div class="stats"><div><div class="xp-num">' + total + '<small>XP</small></div>' +
+      '<div class="meter" role="img" aria-label="Progreso hacia el siguiente rango"><i style="width:' + pct + '%"></i></div>' +
+      '<p class="stat-note"><b>' + rank.n + '</b> · ' + note + '</p></div>' +
+      '<div class="week"><span class="kicker">Semanas jugando</span><b>' + run + '</b>' +
+      '<span class="stat-note">' + (played ? 'Esta semana ya has jugado.' : 'Esta semana aún no. Con 10 minutos vale.') + ' Si te saltas una semana, no pasa nada.</span></div></div>' + acctHTML() + '</header>';
+  }
+
+  function acctHTML() {
+    if (!sb) return '';
+    if (session) {
+      return '<div class="acct"><span>Cuenta: <b>' + esc(session.user.email || '') + '</b> · <span id="syncnote">' + esc(syncText()) + '</span></span><button class="btn alt sm" data-act="logout" data-fid="lo">Salir</button></div>';
+    }
+    return '<div class="acct"><span>Sin cuenta: el progreso solo está en este navegador.</span><button class="btn sm" data-act="login-open" data-fid="li">Entrar para guardarlo en la nube</button></div>';
+  }
+
+  function loginHTML() {
+    return '<button class="btn alt back" data-act="back" data-fid="bkl">← Mapa</button>' +
+      '<div class="mhead"><p class="kicker muted">Cuenta</p><h1>Guarda tu progreso en la nube</h1><p class="goal">Con una cuenta, tus misiones, tu XP y tus medallas te siguen a cualquier ordenador o móvil.</p></div>' +
+      '<form class="login" data-form="login">' +
+      '<div class="linkbox"><label for="lm">Correo electrónico</label><input id="lm" data-fid="lm" type="email" autocomplete="email" required value="' + esc(loginEmail) + '"></div>' +
+      '<div class="linkbox"><label for="lp">Contraseña</label><input id="lp" data-fid="lp" type="password" autocomplete="current-password" minlength="8" required><small>Mínimo 8 caracteres.</small></div>' +
+      '<div class="actions"><button class="btn green" type="submit" data-fid="ls"' + (loginBusy ? ' disabled' : '') + '>Entrar</button>' +
+      '<button class="btn alt" type="button" data-act="signup" data-fid="lsu"' + (loginBusy ? ' disabled' : '') + '>Crear cuenta</button></div>' +
+      (loginMsg ? '<p class="msg" role="status">' + esc(loginMsg) + '</p>' : '') + '</form>' +
+      '<p class="muted">¿Primera vez? Un adulto crea la cuenta con su correo y se la presta al jugador. Sin cuenta también se puede jugar: el progreso se queda en este navegador.</p>';
+  }
+
+  function dailyHTML() {
+    var key = todayKey();
+    var days = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 864e5);
+    var d = DAILY[days % DAILY.length];
+    if (state.daily[key]) {
+      return '<section><h2>Reto del día</h2><div class="card daily"><p class="q">' + esc(d.q) + '</p><p class="msg ok">Correcto. +' + DAILY_XP + ' XP. ' + esc(d.why) + ' Vuelve mañana para otro reto.</p></div></section>';
+    }
+    var opts = d.o.map(function (o, i) { return '<button class="opt" data-act="daily" data-i="' + i + '" data-fid="d' + i + '">' + esc(o) + '</button>'; }).join('');
+    var msg = dailyMsg ? '<p class="msg no">' + esc(dailyMsg) + '</p>' : '';
+    return '<section><h2>Reto del día <span class="pill">5 min · +' + DAILY_XP + ' XP</span></h2><div class="card daily"><p class="q">' + esc(d.q) + '</p><div class="opts">' + opts + '</div>' + msg + '</div></section>';
+  }
+
+  function mapHTML() {
+    var items = MISSIONS.map(function (m) {
+      var s = status(m);
+      var node = s === 'done' ? ICON_CHECK : s === 'lock' ? ICON_LOCK : String(m.n);
+      var label = s === 'done' ? '<span class="pill go">Hecha · ' + (m.xp + (state.reto[m.id] ? RETO_XP : 0)) + ' XP</span>' : '<span class="pill">+' + m.xp + ' XP</span>';
+      var sub = s === 'lock' ? 'Completa la misión ' + (m.n - 1) + ' para abrirla.' : m.concept;
+      var inner = '<h3>' + esc(m.title) + '</h3><div class="row"><span>' + m.time + ' min</span><span>' + esc(sub) + '</span>' + label + '</div>';
+      var card = s === 'lock'
+        ? '<div class="mcard">' + inner + '</div>'
+        : '<button class="mcard" data-act="open" data-id="' + m.id + '" data-fid="o' + m.id + '">' + inner + '</button>';
+      return '<li class="st-' + s + '"><div class="node">' + node + '</div>' + card + '</li>';
+    }).join('');
+    var fut = FUTURE.map(function (f) { return '<div><span class="kicker">' + f.n + '</span><b>' + f.t + '</b><span>' + f.d + '. Próximamente.</span></div>'; }).join('');
+    var m5 = !!state.done.m5;
+    var medals = '<div class="medal' + (m5 ? '' : ' off') + '">' + medal(m5) + '<b>Delantero Creador</b><span>' + (m5 ? 'Nivel 1 conseguido' : 'Termina el Nivel 1') + '</span></div>' +
+      FUTURE.map(function (f) { return '<div class="medal off">' + medal(false) + '<b>' + f.t + '</b><span>' + f.n + '</span></div>'; }).join('');
+    var links = MISSIONS.filter(function (m) { return state.links[m.id]; }).map(function (m) {
+      return '<li><span><b>Misión ' + m.n + '</b> · ' + esc(m.title) + '</span><a href="' + esc(state.links[m.id]) + '" target="_blank" rel="noopener noreferrer">Abrir juego</a></li>';
+    }).join('');
+    var gallery = links ? '<ul class="gallery">' + links + '</ul>' : '<p class="muted">Pega el enlace de tus juegos al terminar cada misión y aparecerán aquí para enseñarlos.</p>';
+    return heroHTML() +
+      (storageOk ? '' : '<p class="warn">Este navegador no deja guardar el progreso. Usa la copia de seguridad del final de la página para no perderlo.</p>') +
+      dailyHTML() +
+      '<section><h2>Temporada · Nivel 1</h2><ol class="map">' + items + '</ol></section>' +
+      '<section><h2>Siguientes niveles</h2><div class="future">' + fut + '</div></section>' +
+      '<section><h2>Medallas</h2><div class="medals">' + medals + '</div></section>' +
+      '<section><h2>Mi galería</h2>' + gallery + '</section>' + footerHTML();
+  }
+
+  function footerHTML() {
+    var box = showBackup
+      ? '<textarea id="bk" data-fid="bk" aria-label="Código de progreso" spellcheck="false">' + esc(backupText) + '</textarea><div class="actions"><button class="btn" data-act="bk-load">Cargar este código</button><button class="btn alt" data-act="bk-hide">Cerrar</button></div>' + (backupMsg ? '<p>' + esc(backupMsg) + '</p>' : '')
+      : '';
+    var reset = resetArm
+      ? '<button class="btn alt" data-act="reset" data-fid="rs">Seguro: borrar todo mi progreso</button><button class="btn alt" data-act="reset-cancel">Cancelar</button>'
+      : '<button class="btn alt" data-act="reset" data-fid="rs">Empezar de cero</button>';
+    return '<footer><div class="actions"><button class="btn alt" data-act="bk-show" data-fid="bs">Copia de seguridad</button>' + reset + '</div>' + box +
+      '<p class="muted">El progreso se guarda en este navegador y, si has entrado con tu cuenta, también en la nube. La copia de seguridad sirve para pasarlo a mano a otro dispositivo.</p></footer>';
+  }
+
+  function missionHTML(id) {
+    var m = mById(id);
+    var done = !!state.done[id];
+    var steps = m.steps.map(function (s, i) {
+      var on = state.steps[id][i];
+      return '<li class="' + (on ? 'on' : '') + '"><label><input type="checkbox" data-act="step" data-id="' + id + '" data-i="' + i + '" data-fid="s' + i + '"' + (on ? ' checked' : '') + (done ? ' disabled' : '') + '><span class="txt">' + fmt(s) + '</span></label></li>';
+    }).join('');
+    var count = state.steps[id].filter(Boolean).length;
+    var link = drafts[id] !== undefined ? drafts[id] : (state.links[id] || '');
+    var win = '';
+    if (justDone === id) {
+      var next = MISSIONS[m.n];
+      win = '<div class="win"><h2>¡Misión completada! +' + m.xp + ' XP</h2>' +
+        (id === 'm5' ? '<p>Has conseguido la medalla <b>Delantero Creador</b>. Enseña tu juego a alguien de la familia.</p>' : '<p>Muy bien. Cada misión te acerca a tu primer partido completo.</p>') +
+        '<div class="actions">' + (next ? '<button class="btn" data-act="open" data-id="' + next.id + '" data-fid="nx">Siguiente: ' + esc(next.title) + '</button>' : '') +
+        '<button class="btn alt" data-act="back" data-fid="bk2">Volver al mapa</button></div></div>';
+    }
+    var finish = done
+      ? '<p class="progress ok">Misión completada</p>'
+      : '<div class="actions"><button class="btn green" data-act="complete" data-fid="cp"' + (allSteps(m) ? '' : ' disabled') + '>¡Misión completada!</button><span class="progress">' + count + ' de ' + m.steps.length + ' pasos</span></div>';
+    return '<button class="btn alt back" data-act="back" data-fid="bk1">← Mapa</button>' + win +
+      '<div class="mhead"><p class="kicker muted">Misión ' + m.n + ' de ' + MISSIONS.length + '</p><h1>' + esc(m.title) + '</h1><p class="goal">' + esc(m.goal) + '</p>' +
+      '<div class="meta"><span class="tag">' + m.time + ' min</span><span class="tag">+' + m.xp + ' XP</span><span class="tag">' + esc(m.concept) + '</span></div>' +
+      '<div class="actions"><a class="btn" href="' + SCRATCH_URL + '" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Abrir Scratch</a><span class="muted">Se abre en otra pestaña. Vuelve aquí para ir marcando los pasos.</span></div></div>' +
+      '<section><h2>Pasos</h2><ul class="steps">' + steps + '</ul></section>' +
+      '<details class="help"><summary>Si no funciona</summary><p>' + esc(m.fail) + '</p></details>' +
+      '<label class="reto"><input type="checkbox" data-act="reto" data-id="' + id + '" data-fid="rt"' + (state.reto[id] ? ' checked' : '') + '><span><b>Reto extra (opcional, +' + RETO_XP + ' XP)</b><br>' + fmt(m.reto) + '</span></label>' +
+      '<div class="linkbox"><label for="lk">Enlace de tu juego compartido (opcional)</label><input id="lk" data-fid="lk" data-act="link" data-id="' + id + '" type="url" inputmode="url" placeholder="https://scratch.mit.edu/projects/123456789/" value="' + esc(link) + '" autocomplete="off"><small>' + esc(linkMsg[id] || 'Cuando compartas el juego en Scratch, copia el enlace aquí y saldrá en tu galería.') + '</small></div>' +
+      finish;
+  }
+
+  function render() {
+    var a = document.activeElement;
+    var fid = a && a.dataset ? a.dataset.fid : null;
+    app.innerHTML = view === 'map' ? mapHTML() : view === 'login' ? loginHTML() : missionHTML(view);
+    if (fid) { var el = app.querySelector('[data-fid="' + fid + '"]'); if (el && !el.disabled) el.focus({ preventScroll: true }); }
+  }
+
+  function confetti() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cols = ['--accent', '--pitch', '--b-motion', '--b-looks', '--b-sound'];
+    for (var i = 0; i < 28; i++) {
+      var s = document.createElement('i');
+      s.className = 'confetti';
+      s.style.background = 'var(' + cols[i % cols.length] + ')';
+      s.style.left = (30 + Math.random() * 40) + 'vw';
+      s.style.top = '35vh';
+      document.body.appendChild(s);
+      var dx = (Math.random() - 0.5) * 360, dy = 140 + Math.random() * 260, r = Math.random() * 720;
+      var anim = s.animate([
+        { transform: 'translate(0,0) rotate(0)', opacity: 1 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + r + 'deg)', opacity: 0 }
+      ], { duration: 1100 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.4,1)' });
+      anim.onfinish = (function (n) { return function () { n.remove(); }; })(s);
+    }
+  }
+
+  /* ---------- Acciones ---------- */
+  app.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act]');
+    if (!t || t.tagName === 'INPUT') return;
+    var act = t.dataset.act, id = t.dataset.id;
+    if (act === 'open') { view = id; justDone = null; render(); window.scrollTo(0, 0); }
+    else if (act === 'back') { view = 'map'; justDone = null; render(); window.scrollTo(0, 0); }
+    else if (act === 'complete') {
+      var m = mById(view);
+      if (m && !state.done[m.id] && allSteps(m)) {
+        state.done[m.id] = true; addWeek(); save(); justDone = m.id; render(); window.scrollTo(0, 0); confetti();
+      }
+    }
+    else if (act === 'daily') {
+      var days = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 864e5);
+      var d = DAILY[days % DAILY.length];
+      if (Number(t.dataset.i) === d.a) { state.daily[todayKey()] = true; addWeek(); save(); dailyMsg = null; confetti(); }
+      else { dailyMsg = 'Casi. Piénsalo otra vez y prueba con otra respuesta.'; }
+      render();
+    }
+    else if (act === 'bk-show') { showBackup = true; backupMsg = ''; backupText = btoa(unescape(encodeURIComponent(JSON.stringify(state)))); render(); }
+    else if (act === 'bk-hide') { showBackup = false; render(); }
+    else if (act === 'bk-load') {
+      var raw = (document.getElementById('bk') || {}).value || '';
+      try {
+        var obj = JSON.parse(decodeURIComponent(escape(atob(raw.trim()))));
+        state = normalize(obj); save(); backupText = raw.trim(); backupMsg = 'Progreso cargado.';
+      } catch (err) { backupMsg = 'Ese código no es válido. Copia el código completo.'; }
+      render();
+    }
+    else if (act === 'reset') {
+      if (resetArm) { state = normalize(null); state.epoch = Date.now(); save(); resetArm = false; showBackup = false; drafts = {}; view = 'map'; }
+      else { resetArm = true; }
+      render();
+    }
+    else if (act === 'reset-cancel') { resetArm = false; render(); }
+    else if (act === 'login-open') { loginMsg = ''; view = 'login'; render(); window.scrollTo(0, 0); }
+    else if (act === 'signup') { if (sb && !loginBusy) doAuth('up'); }
+    else if (act === 'logout') { if (sb) sb.auth.signOut(); }
+  });
+
+  app.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t.dataset || !t.dataset.act) return;
+    if (t.dataset.act === 'step') {
+      state.steps[t.dataset.id][Number(t.dataset.i)] = t.checked; save(); render();
+    } else if (t.dataset.act === 'reto') {
+      state.reto[t.dataset.id] = t.checked; save(); render();
+    } else if (t.dataset.act === 'link') {
+      var v = t.value.trim(), id = t.dataset.id;
+      if (!v) { delete state.links[id]; delete drafts[id]; linkMsg[id] = 'Enlace borrado.'; }
+      else if (LINK_RE.test(v)) { state.links[id] = v; delete drafts[id]; linkMsg[id] = 'Guardado. Aparece en tu galería.'; }
+      else { drafts[id] = v; linkMsg[id] = 'El enlace tiene que ser como https://scratch.mit.edu/projects/123456789/'; }
+      save(); render();
+    }
+  });
+
+  app.addEventListener('submit', function (e) {
+    if (e.target.dataset && e.target.dataset.form === 'login') {
+      e.preventDefault();
+      if (sb && !loginBusy) doAuth('in');
+      return;
+    }
+    if (e.target.dataset && e.target.dataset.form === 'name') {
+      e.preventDefault();
+      var v = (document.getElementById('nm').value || '').trim().slice(0, 24);
+      if (v) { state.name = v; save(); render(); }
+    }
+  });
+
+  state = load();
+  render();
+
+  if (sb) {
+    sb.auth.onAuthStateChange(function (ev, s) {
+      var before = session ? session.user.id : null;
+      session = s;
+      var now = s ? s.user.id : null;
+      if (!s) syncState = 'local';
+      if (now && (ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION')) setTimeout(pull, 0);
+      if (before !== now) render();
+    });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && session) pull(); });
+    window.addEventListener('online', function () { if (session) pull(); });
+  }
+})();
+</script>
+</body>
+</html>
