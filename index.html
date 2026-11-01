@@ -232,20 +232,22 @@ form.login .msg { font-weight: 700; }
 
   var MISSIONS = [
     { id: 'm1', n: 1, title: 'Mueve el balón', time: 10, xp: 10, concept: 'Eventos y coordenadas',
-      goal: 'Controla un balón con las flechas del teclado.',
+      goal: 'Empiezas desde cero, con un proyecto nuevo y vacío. Al terminar tendrás un balón que se mueve con las flechas sobre un campo de fútbol.',
       steps: [
         'Abre Scratch y crea un proyecto nuevo.',
         'Borra el gato y elige un personaje de la biblioteca: busca «soccer ball».',
         'Cambia el fondo por un campo de fútbol: busca «soccer» en la biblioteca de fondos.',
         'Arrastra {events|al presionar tecla espacio} y cambia la tecla a flecha derecha.',
         'Debajo, pon {motion|sumar 10 a x}. ¡Pulsa la flecha y mira cómo se mueve!',
-        'Repite para las otras tres flechas: izquierda (x con -10), arriba ({motion|sumar 10 a y}) y abajo (y con -10).'
+        'Repite para las otras tres flechas: izquierda (x con -10), arriba ({motion|sumar 10 a y}) y abajo (y con -10).',
+        'Guarda el proyecto con el nombre «Mi partido» (menú Archivo > Guardar en tu ordenador). Lo vas a seguir usando en todas las misiones del Nivel 1: no crees otro nuevo.'
       ],
       fail: '¿Se mueve al revés? Mira el signo del número. ¿No se mueve? Haz clic dentro del escenario antes de pulsar las teclas.',
       reto: 'Que el balón gire mientras avanza (bloque {motion|girar}) o que vaya más rápido cambiando el 10 por otro número.' },
     { id: 'm2', n: 2, title: '¡Gol!', time: 15, xp: 15, concept: 'Condicionales y bucles',
-      goal: 'Haz que el juego se dé cuenta de cuándo el balón entra en la portería y lo celebre.',
+      goal: 'Sigues con el MISMO proyecto «Mi partido» de la misión 1 (no empieces uno nuevo). Al terminar, el juego se dará cuenta de cuándo el balón entra en la portería y lo celebrará.',
       steps: [
+        'Abre «Mi partido» en Scratch (Archivo > Cargar desde tu ordenador). Debe tener el campo y el balón que se mueve con las flechas. Al terminar la misión, guárdalo otra vez con el mismo nombre.',
         'Crea un personaje nuevo con el pincel (Pintar): dibuja un rectángulo blanco y llámalo Portería. Colócalo arriba del campo.',
         'Selecciona el balón y añade {events|al hacer clic en la bandera verde}.',
         'Debajo, añade {control|por siempre} y dentro un {control|si … entonces}.',
@@ -256,8 +258,9 @@ form.login .msg { font-weight: 700; }
       fail: 'El balón no reacciona. Comprueba que el bloque «si» está dentro de «por siempre» y que el nombre de la portería coincide.',
       reto: 'Que al marcar cambie el fondo, o que el balón cambie de disfraz.' },
     { id: 'm3', n: 3, title: 'El portero', time: 15, xp: 15, concept: 'Movimiento automático y bucles',
-      goal: 'Crea un portero que se mueve solo y que no es tan fácil de superar.',
+      goal: 'Sigues con «Mi partido» tal como lo dejaste en la misión 2 (campo, balón y portería). Al terminar, tendrás un portero que se mueve solo y que no es tan fácil de superar.',
       steps: [
+        'Abre «Mi partido» tal como lo guardaste en la misión 2: el balón ya marca gol en la portería. Al terminar, guárdalo otra vez con el mismo nombre.',
         'Añade un personaje nuevo: una persona de la biblioteca o dibujada por ti. Llámalo Portero y colócalo delante de la portería.',
         'Añade {events|al hacer clic en la bandera verde} y debajo un {control|por siempre}.',
         'Dentro del bucle, pon {motion|deslizar en 1 segundos a x: -100 y: …} y, debajo, otro {motion|deslizar en 1 segundos a x: 100 y: …}. Deja la y como está, para que se mueva en línea recta delante de la portería.',
@@ -267,8 +270,9 @@ form.login .msg { font-weight: 700; }
       fail: 'El portero no se mueve. Comprueba que has hecho clic en la bandera verde y que los bloques están dentro del bucle.',
       reto: 'Hazlo más rápido cambiando el 1 por 0,5. Aún más difícil: que el portero se mueva a un punto al azar con {operators|número al azar entre -100 y 100}.' },
     { id: 'm4', n: 4, title: 'El marcador', time: 10, xp: 10, concept: 'Variables',
-      goal: 'Haz que el juego cuente los goles.',
+      goal: 'Sigues con «Mi partido» tal como lo dejaste en la misión 3 (con portero). Al terminar, el juego contará los goles en un marcador.',
       steps: [
+        'Abre «Mi partido» tal como lo guardaste en la misión 3: ya hay balón, portería y portero. Al terminar, guárdalo otra vez con el mismo nombre.',
         'En la categoría naranja Variables, pulsa «Crear una variable», llámala Goles y deja marcada la opción «para todos los objetos». Verás el marcador en el escenario.',
         'Selecciona el balón. Dentro de {events|al hacer clic en la bandera verde}, antes del {control|por siempre}, añade {variables|fijar Goles a 0}.',
         'En el {control|si … entonces} del gol, antes de volver al centro, añade {variables|sumar 1 a Goles}.',
@@ -277,8 +281,9 @@ form.login .msg { font-weight: 700; }
       fail: 'El marcador no sube o sube de golpe. Comprueba que el «sumar 1» está dentro del «si» del gol y no dentro del bucle sin condición.',
       reto: 'Crea otra variable, Paradas, que suba cada vez que el portero toca el balón. Después compara: ¿has marcado más goles que paradas ha hecho el portero?' },
     { id: 'm5', n: 5, title: 'Tu primer partido completo', time: 15, xp: 30, concept: 'Condición de victoria y compartir',
-      goal: 'Convierte lo que has hecho en un juego con final, nombre y camiseta propia, y enséñaselo a alguien.',
+      goal: 'Sigues con «Mi partido» tal como lo dejaste en la misión 4 (con marcador). Al terminar, será un juego con final, nombre y camiseta propia, y se lo habrás enseñado a alguien.',
       steps: [
+        'Abre «Mi partido» tal como lo guardaste en la misión 4: ya cuenta los goles en la variable Goles. Al terminar, guárdalo otra vez.',
         'En el balón, dentro del {control|por siempre}, añade un nuevo {control|si … entonces} con la condición {operators|Goles = 5}.',
         'Dentro, pon {looks|decir ¡HAS GANADO! por 2 segundos} y después {control|detener todos}.',
         'Personaliza: cambia el nombre del proyecto por el de tu juego, dibuja un disfraz con los colores de tu equipo y añade un sonido de victoria.',

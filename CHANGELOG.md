@@ -2,6 +2,11 @@
 
 Curso de programación para un niño de 10 años. App en un único `index.html`; el contenido son misiones cortas con Scratch.
 
+## 2026-11-01 · v0.2.1 (instrucciones de continuidad)
+
+- Cada misión del Nivel 1 indica ahora de dónde se parte y qué se consigue: la misión 1 empieza con un proyecto nuevo de Scratch y lo guarda como «Mi partido»; las misiones 2 a 5 continúan ese mismo proyecto (primer paso: abrirlo y guardarlo de nuevo al acabar).
+- El objetivo de cada misión menciona el punto de partida y el resultado final.
+
 ## 2026-10-12 · v0.2 (cuenta y sincronización)
 
 - La app está publicada en Vercel (equipo andalarsoft, proyecto `liga-creadores`) en https://liga-creadores.vercel.app, sin login de Vercel y marcada como no indexable.
