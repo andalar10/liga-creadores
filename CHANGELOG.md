@@ -6,6 +6,7 @@ Curso de programación para un niño de 10 años. App en un único `index.html`;
 
 - Cada misión del Nivel 1 indica ahora de dónde se parte y qué se consigue: la misión 1 empieza con un proyecto nuevo de Scratch y lo guarda como «Mi partido»; las misiones 2 a 5 continúan ese mismo proyecto (primer paso: abrirlo y guardarlo de nuevo al acabar).
 - El objetivo de cada misión menciona el punto de partida y el resultado final.
+- Misiones 1 y 2 reescritas paso a paso: cómo empezar (proyecto vacío en la 1, cargar «Mi partido.sb3» en la 2), cómo guardar en Scratch (Archivo > Guardar en tu ordenador, o Guardar ahora con cuenta), qué se consigue y una frase «Aprendes» en cada paso.
 
 ## 2026-10-12 · v0.2 (cuenta y sincronización)
 
